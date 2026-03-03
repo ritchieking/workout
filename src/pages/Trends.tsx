@@ -209,7 +209,7 @@ function VolumeChart() {
                 }}
                 labelStyle={{ color: '#94a3b8' }}
                 itemStyle={{ color: '#60a5fa' }}
-                formatter={(value: number) => [`${value.toLocaleString()} lbs`, 'Volume']}
+                formatter={(value: number | undefined) => [`${(value ?? 0).toLocaleString()} lbs`, 'Volume']}
               />
               <Line
                 type="monotone"

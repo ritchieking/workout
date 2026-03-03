@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from './supabase'
 import type {
   Program,
-  Cycle,
-  Week,
   ProgrammedWorkout,
   ProgrammedExercise,
   WorkoutLog,
@@ -128,7 +126,7 @@ export function useExerciseHistory(exerciseName: string) {
   return history
 }
 
-export function useSuggestedWeight(exerciseName: string, prescribedReps: number, bodyRegion: 'upper' | 'lower') {
+export function useSuggestedWeight(exerciseName: string, _prescribedReps: number, bodyRegion: 'upper' | 'lower') {
   const [suggestion, setSuggestion] = useState<{ weight: number; reason: string } | null>(null)
   const history = useExerciseHistory(exerciseName)
 
