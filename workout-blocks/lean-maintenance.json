@@ -1,0 +1,976 @@
+{
+    "name": "12-Week Lean Recomp — Dumbbell Superset Program",
+    "description": "Fat loss while preserving muscle. Upper/lower split with antagonist supersets. All exercises use dumbbells and a flat bench. 4 lifting days, 2 cardio days, 1 yoga/mobility day per week.",
+    "start_date": "2026-03-09",
+    "cycles": [
+      {
+        "name": "Foundation",
+        "cycle_type": "hypertrophy",
+        "color": "#3B82F6",
+        "weeks": [
+          {
+            "week_number": 1,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Incline Fly", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Reverse Fly", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Overhead Tricep Extension", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Hammer Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Bulgarian Split Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Calf Raise", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Crunch", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "45 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Arnold Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Shrug", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Skull Crusher", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Concentration Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Stiff-Leg Deadlift", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Step-Up", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Glute Bridge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Side Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Woodchop", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "45 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Focus on hips and thoracic spine."
+              }
+            ]
+          },
+          {
+            "week_number": 2,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Incline Fly", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Reverse Fly", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Overhead Tricep Extension", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Hammer Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Bulgarian Split Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Calf Raise", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Crunch", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "45 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Arnold Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Shrug", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Skull Crusher", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Concentration Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Stiff-Leg Deadlift", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Step-Up", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Glute Bridge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Side Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Woodchop", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "45 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Focus on hips and thoracic spine."
+              }
+            ]
+          },
+          {
+            "week_number": 3,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Incline Fly", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Reverse Fly", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Overhead Tricep Extension", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Hammer Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Bulgarian Split Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Calf Raise", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Crunch", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "45 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Arnold Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Shrug", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Skull Crusher", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Concentration Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Stiff-Leg Deadlift", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Step-Up", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Glute Bridge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Side Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Woodchop", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "45 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Focus on hips and thoracic spine."
+              }
+            ]
+          },
+          {
+            "week_number": 4,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Incline Fly", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Reverse Fly", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Overhead Tricep Extension", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Hammer Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Bulgarian Split Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Calf Raise", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Crunch", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "45 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Arnold Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Shrug", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Skull Crusher", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Concentration Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Stiff-Leg Deadlift", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Step-Up", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Glute Bridge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Side Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Woodchop", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "45 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Focus on hips and thoracic spine."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Build",
+        "cycle_type": "hypertrophy",
+        "color": "#8B5CF6",
+        "weeks": [
+          {
+            "week_number": 5,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — volume increase — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Incline Press", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Face Pull", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Close-Grip Press", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Incline Curl", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — volume increase — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Bulgarian Split Squat", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Calf Raise", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Dead Bug", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "50 min easy effort — slightly longer duration this block. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — volume increase — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Arnold Press", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Upright Row", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Tricep Kickback", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Zottman Curl", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — volume increase — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Single-Leg Deadlift", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Reverse Lunge", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Hip Thrust", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Curtsy Lunge", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Russian Twist", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "50 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Focus on hips and thoracic spine."
+              }
+            ]
+          },
+          {
+            "week_number": 6,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Incline Press", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Face Pull", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Close-Grip Press", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Incline Curl", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Bulgarian Split Squat", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Calf Raise", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Dead Bug", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "50 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Arnold Press", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Upright Row", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Tricep Kickback", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Zottman Curl", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Single-Leg Deadlift", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Reverse Lunge", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Hip Thrust", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Curtsy Lunge", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Russian Twist", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "50 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Focus on hips and thoracic spine."
+              }
+            ]
+          },
+          {
+            "week_number": 7,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Incline Press", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Face Pull", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Close-Grip Press", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Incline Curl", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Bulgarian Split Squat", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Calf Raise", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Dead Bug", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "50 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Arnold Press", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Upright Row", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Tricep Kickback", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Zottman Curl", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Single-Leg Deadlift", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Reverse Lunge", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Hip Thrust", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Curtsy Lunge", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Russian Twist", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "50 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Focus on hips and thoracic spine."
+              }
+            ]
+          },
+          {
+            "week_number": 8,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Incline Press", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Face Pull", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Close-Grip Press", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Incline Curl", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Bulgarian Split Squat", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Calf Raise", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Dead Bug", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "50 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Arnold Press", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 4, "reps": 10, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Upright Row", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Tricep Kickback", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Zottman Curl", "sets": 3, "reps": 10, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Single-Leg Deadlift", "sets": 4, "reps": 10, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Reverse Lunge", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Hip Thrust", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Curtsy Lunge", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Russian Twist", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "50 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Focus on hips and thoracic spine."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Peak Lean",
+        "cycle_type": "intensity",
+        "color": "#F59E0B",
+        "weeks": [
+          {
+            "week_number": 9,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — heavy compounds + high-rep finishers — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Squeeze Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Rear Delt Fly", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Overhead Tricep Extension", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Hammer Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — heavy + metabolic finisher — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Walking Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Goblet Squat Pulse", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Plank Pull-Through", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "55 min easy effort — longest duration this block. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — heavy + high-rep finisher — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Seated OHP", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Face Pull", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Skull Crusher", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Incline Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — heavy + metabolic finisher — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Single-Leg Deadlift", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Reverse Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Hip Thrust", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Jump Squat", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Bicycle Crunch", "sets": 3, "reps": 20, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "55 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Extra focus on recovery this block."
+              }
+            ]
+          },
+          {
+            "week_number": 10,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Squeeze Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Rear Delt Fly", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Overhead Tricep Extension", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Hammer Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Walking Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Goblet Squat Pulse", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Plank Pull-Through", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "55 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Seated OHP", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Face Pull", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Skull Crusher", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Incline Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Single-Leg Deadlift", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Reverse Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Hip Thrust", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Jump Squat", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Bicycle Crunch", "sets": 3, "reps": 20, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "55 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Extra focus on recovery this block."
+              }
+            ]
+          },
+          {
+            "week_number": 11,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Squeeze Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Rear Delt Fly", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Overhead Tricep Extension", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Hammer Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Walking Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Goblet Squat Pulse", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Plank Pull-Through", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "55 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Seated OHP", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Face Pull", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Skull Crusher", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Incline Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Single-Leg Deadlift", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Reverse Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Hip Thrust", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Jump Squat", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Bicycle Crunch", "sets": 3, "reps": 20, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "55 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Extra focus on recovery this block."
+              }
+            ]
+          },
+          {
+            "week_number": 12,
+            "workouts": [
+              {
+                "name": "Upper Body A",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Horizontal push/pull — final week, push hard — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Bench Press", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Bent-Over Row", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Squeeze Press", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Rear Delt Fly", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Overhead Tricep Extension", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Hammer Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body A",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Quad-dominant — final week — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Goblet Squat", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Romanian Deadlift", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Walking Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Lying Hamstring Curl", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Goblet Squat Pulse", "sets": 3, "reps": 15, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Weighted Plank Pull-Through", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "55 min easy effort — walk, bike, or jog. Keep heart rate 120-140 bpm."
+              },
+              {
+                "name": "Upper Body B",
+                "workout_type": "lifting",
+                "muscle_group": "upper",
+                "description": "Vertical push/pull — final week — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Seated OHP", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Pullover", "sets": 4, "reps": 8, "body_region": "upper", "superset_group": "A" },
+                  { "name": "Dumbbell Lateral Raise", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Face Pull", "sets": 3, "reps": 15, "body_region": "upper", "superset_group": "B" },
+                  { "name": "Dumbbell Skull Crusher", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" },
+                  { "name": "Dumbbell Incline Curl", "sets": 3, "reps": 12, "body_region": "upper", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Lower Body B",
+                "workout_type": "lifting",
+                "muscle_group": "lower",
+                "description": "Hip-hinge dominant — final week, finish strong — 3 supersets",
+                "exercises": [
+                  { "name": "Dumbbell Sumo Squat", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Single-Leg Deadlift", "sets": 4, "reps": 8, "body_region": "lower", "superset_group": "A" },
+                  { "name": "Dumbbell Reverse Lunge", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Hip Thrust", "sets": 3, "reps": 12, "body_region": "lower", "superset_group": "B" },
+                  { "name": "Dumbbell Jump Squat", "sets": 3, "reps": 10, "body_region": "lower", "superset_group": "C" },
+                  { "name": "Dumbbell Bicycle Crunch", "sets": 3, "reps": 20, "body_region": "lower", "superset_group": "C" }
+                ]
+              },
+              {
+                "name": "Zone 2 Cardio",
+                "workout_type": "cardio",
+                "muscle_group": null,
+                "description": "55 min easy effort — final cardio session. Finish strong."
+              },
+              {
+                "name": "Yoga / Mobility",
+                "workout_type": "yoga",
+                "muscle_group": null,
+                "description": "Attend a class or 30 min follow-along. Celebrate finishing the program!"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
