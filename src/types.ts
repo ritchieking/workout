@@ -75,6 +75,11 @@ export interface SetLog {
   created_at: string
 }
 
+export interface ExerciseVideo {
+  name: string
+  video_url: string | null
+}
+
 // JSON import types
 export interface ProgramImport {
   name: string

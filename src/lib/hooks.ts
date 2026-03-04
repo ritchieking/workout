@@ -10,6 +10,26 @@ import type {
   ProgramImport,
 } from '../types'
 
+export function useExerciseVideos() {
+  const [videos, setVideos] = useState<Map<string, string>>(new Map())
+
+  useEffect(() => {
+    supabase
+      .from('exercise_videos')
+      .select('name, video_url')
+      .not('video_url', 'is', null)
+      .then(({ data }) => {
+        const map = new Map<string, string>()
+        for (const row of data || []) {
+          if (row.video_url) map.set(row.name, row.video_url)
+        }
+        setVideos(map)
+      })
+  }, [])
+
+  return videos
+}
+
 export function useActiveProgram() {
   const [program, setProgram] = useState<Program | null>(null)
   const [loading, setLoading] = useState(true)
@@ -312,6 +332,26 @@ export async function importProgram(data: ProgramImport) {
 
       globalWeekIndex++
     }
+  }
+
+  // Auto-insert exercise names into exercise_videos lookup table
+  const exerciseNames = new Set<string>()
+  for (const cycle of data.cycles) {
+    for (const week of cycle.weeks) {
+      for (const workout of week.workouts) {
+        for (const ex of workout.exercises || []) {
+          exerciseNames.add(ex.name)
+        }
+      }
+    }
+  }
+  if (exerciseNames.size > 0) {
+    await supabase
+      .from('exercise_videos')
+      .upsert(
+        Array.from(exerciseNames).map((name) => ({ name })),
+        { onConflict: 'name', ignoreDuplicates: true }
+      )
   }
 
   return program

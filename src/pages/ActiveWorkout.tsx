@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useWorkoutDetails, useSuggestedWeight, logWorkoutComplete } from '../lib/hooks'
+import { useWorkoutDetails, useSuggestedWeight, useExerciseVideos, logWorkoutComplete } from '../lib/hooks'
 import type { ProgrammedExercise } from '../types'
 
 // ─── Per-exercise set logging state ───────────────────────────────────────────
@@ -37,6 +37,7 @@ function ExerciseCard({
   sets,
   onUpdateSet,
   onLogSet,
+  videoUrl,
 }: {
   exercise: ProgrammedExercise
   isExpanded: boolean
@@ -44,6 +45,7 @@ function ExerciseCard({
   sets: SetEntry[]
   onUpdateSet: (setIndex: number, field: 'weight' | 'reps', value: number) => void
   onLogSet: (setIndex: number) => void
+  videoUrl?: string
 }) {
   const activeSetIndex = sets.findIndex((s) => !s.logged)
   const allLogged = activeSetIndex === -1
@@ -59,6 +61,18 @@ function ExerciseCard({
         <div className="text-left">
           <h3 className={`text-lg font-semibold ${allLogged ? 'text-emerald-400 line-through' : 'text-white'}`}>
             {exercise.name}
+            {videoUrl && (
+              <span
+                role="button"
+                className="inline-flex items-center ml-2 text-slate-400 active:text-slate-200 align-middle"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  window.open(videoUrl, '_blank')
+                }}
+              >
+                <VideoIcon />
+              </span>
+            )}
           </h3>
           <p className="text-sm text-slate-400">
             {exercise.sets} &times; {exercise.reps}
@@ -302,6 +316,14 @@ function CheckIcon() {
   )
 }
 
+function VideoIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+    </svg>
+  )
+}
+
 function LinkIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -323,6 +345,7 @@ export default function ActiveWorkout() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { workout, exercises, loading } = useWorkoutDetails(id)
+  const exerciseVideos = useExerciseVideos()
 
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [setsMap, setSetsMap] = useState<Record<string, SetEntry[]>>({})
@@ -517,6 +540,7 @@ export default function ActiveWorkout() {
                 sets={setsMap[ex.id] || []}
                 onUpdateSet={(si, field, val) => updateSet(ex.id, si, field, val)}
                 onLogSet={(si) => logSet(ex.id, si)}
+                videoUrl={exerciseVideos.get(ex.name)}
               />
             )
           }
@@ -539,6 +563,7 @@ export default function ActiveWorkout() {
                   sets={setsMap[ex.id] || []}
                   onUpdateSet={(si, field, val) => updateSet(ex.id, si, field, val)}
                   onLogSet={(si) => logSet(ex.id, si)}
+                  videoUrl={exerciseVideos.get(ex.name)}
                 />
               ))}
             </div>

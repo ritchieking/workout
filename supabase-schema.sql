@@ -101,3 +101,61 @@ CREATE POLICY "Allow all" ON programmed_workouts FOR ALL USING (true) WITH CHECK
 CREATE POLICY "Allow all" ON programmed_exercises FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all" ON workout_logs FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all" ON set_logs FOR ALL USING (true) WITH CHECK (true);
+
+-- Exercise video links (lookup table keyed by exercise name)
+CREATE TABLE exercise_videos (
+  name TEXT PRIMARY KEY,
+  video_url TEXT
+);
+
+ALTER TABLE exercise_videos ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow all" ON exercise_videos FOR ALL USING (true) WITH CHECK (true);
+
+-- Seed with all exercise names from lean-maintenance program
+INSERT INTO exercise_videos (name) VALUES
+  ('Dumbbell Arnold Press'),
+  ('Dumbbell Bench Press'),
+  ('Dumbbell Bent-Over Row'),
+  ('Dumbbell Bicycle Crunch'),
+  ('Dumbbell Bulgarian Split Squat'),
+  ('Dumbbell Calf Raise'),
+  ('Dumbbell Close-Grip Press'),
+  ('Dumbbell Concentration Curl'),
+  ('Dumbbell Curtsy Lunge'),
+  ('Dumbbell Face Pull'),
+  ('Dumbbell Glute Bridge'),
+  ('Dumbbell Goblet Squat'),
+  ('Dumbbell Goblet Squat Pulse'),
+  ('Dumbbell Hammer Curl'),
+  ('Dumbbell Hip Thrust'),
+  ('Dumbbell Incline Curl'),
+  ('Dumbbell Incline Fly'),
+  ('Dumbbell Incline Press'),
+  ('Dumbbell Jump Squat'),
+  ('Dumbbell Lateral Raise'),
+  ('Dumbbell Lying Hamstring Curl'),
+  ('Dumbbell Overhead Tricep Extension'),
+  ('Dumbbell Pullover'),
+  ('Dumbbell Rear Delt Fly'),
+  ('Dumbbell Reverse Fly'),
+  ('Dumbbell Reverse Lunge'),
+  ('Dumbbell Romanian Deadlift'),
+  ('Dumbbell Russian Twist'),
+  ('Dumbbell Seated OHP'),
+  ('Dumbbell Shrug'),
+  ('Dumbbell Side Lunge'),
+  ('Dumbbell Single-Leg Deadlift'),
+  ('Dumbbell Skull Crusher'),
+  ('Dumbbell Squeeze Press'),
+  ('Dumbbell Step-Up'),
+  ('Dumbbell Stiff-Leg Deadlift'),
+  ('Dumbbell Sumo Squat'),
+  ('Dumbbell Tricep Kickback'),
+  ('Dumbbell Upright Row'),
+  ('Dumbbell Walking Lunge'),
+  ('Dumbbell Weighted Crunch'),
+  ('Dumbbell Weighted Dead Bug'),
+  ('Dumbbell Weighted Plank Pull-Through'),
+  ('Dumbbell Woodchop'),
+  ('Dumbbell Zottman Curl')
+ON CONFLICT DO NOTHING;
