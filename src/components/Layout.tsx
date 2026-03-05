@@ -9,7 +9,7 @@ const tabs = [
 export default function Layout() {
   return (
     <div className="flex flex-col min-h-dvh bg-slate-950">
-      <main className="flex-1 pb-20 overflow-y-auto">
+      <main className="flex-1 pb-20 overflow-y-auto safe-top">
         <Outlet />
       </main>
       <nav className="fixed bottom-0 inset-x-0 bg-slate-900 border-t border-slate-800 safe-bottom">

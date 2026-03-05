@@ -172,7 +172,7 @@ function SetRow({
             ref={sliderRef}
             type="range"
             min={0}
-            max={500}
+            max={80}
             step={5}
             value={entry.weight}
             onChange={handleSliderChange}
@@ -181,7 +181,7 @@ function SetRow({
           />
           <button
             type="button"
-            onClick={() => onUpdateWeight(Math.min(500, entry.weight + 5))}
+            onClick={() => onUpdateWeight(Math.min(80, entry.weight + 5))}
             className="w-14 h-14 flex items-center justify-center rounded-xl bg-slate-700 active:bg-slate-600 text-white text-xl font-bold shrink-0"
           >
             +5
