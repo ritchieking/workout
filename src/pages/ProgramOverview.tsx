@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useActiveProgram, logWorkoutComplete, deleteWorkoutLog } from '../lib/hooks'
 import { importProgram } from '../lib/hooks'
@@ -932,6 +933,7 @@ function DayDetailModal({
 // ── Page ──────────────────────────────────────────────────────────
 
 export default function ProgramOverview() {
+  const navigate = useNavigate()
   const userId = useUser()
   const { program, loading: programLoading } = useActiveProgram(userId)
   const [cycles, setCycles] = useState<Cycle[]>([])
@@ -1048,6 +1050,17 @@ export default function ProgramOverview() {
       )}
 
       <PastPrograms />
+
+      {/* Switch user */}
+      <button
+        onClick={() => {
+          localStorage.removeItem('workout-user')
+          navigate('/')
+        }}
+        className="w-full flex items-center justify-center gap-2 rounded-lg bg-slate-800/60 border border-slate-700 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+      >
+        Switch User
+      </button>
 
       <ImportProgramModal
         open={importOpen}

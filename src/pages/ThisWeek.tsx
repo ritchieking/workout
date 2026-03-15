@@ -455,6 +455,7 @@ export default function ThisWeek() {
     <div className="pb-6">
       {/* Header */}
       <div className="px-5 pt-6 pb-4">
+        <p className="text-sm text-slate-500 mb-1 capitalize">Welcome, {userId}</p>
         <h1 className="text-2xl font-bold text-white">{weekLabel}</h1>
         <p className="text-sm text-slate-400 mt-1">{subtitle}</p>
 
