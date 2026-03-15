@@ -39,6 +39,7 @@ function ExerciseCard({
   sets,
   onUpdateSet,
   onLogSet,
+  onUnlogSet,
   videoUrl,
 }: {
   exercise: ProgrammedExercise
@@ -47,6 +48,7 @@ function ExerciseCard({
   sets: SetEntry[]
   onUpdateSet: (setIndex: number, field: 'weight' | 'reps', value: number) => void
   onLogSet: (setIndex: number) => void
+  onUnlogSet: (setIndex: number) => void
   videoUrl?: string
 }) {
   const activeSetIndex = sets.findIndex((s) => !s.logged)
@@ -101,6 +103,7 @@ function ExerciseCard({
               onUpdateWeight={(w) => onUpdateSet(idx, 'weight', w)}
               onUpdateReps={(r) => onUpdateSet(idx, 'reps', r)}
               onLog={() => onLogSet(idx)}
+              onUnlog={() => onUnlogSet(idx)}
             />
           ))}
         </div>
@@ -118,6 +121,7 @@ function SetRow({
   onUpdateWeight,
   onUpdateReps,
   onLog,
+  onUnlog,
 }: {
   setNumber: number
   entry: SetEntry
@@ -126,6 +130,7 @@ function SetRow({
   onUpdateWeight: (w: number) => void
   onUpdateReps: (r: number) => void
   onLog: () => void
+  onUnlog: () => void
 }) {
   const sliderRef = useRef<HTMLInputElement>(null)
 
@@ -138,13 +143,18 @@ function SetRow({
 
   if (entry.logged) {
     return (
-      <div className="flex items-center gap-3 opacity-50">
+      <button
+        type="button"
+        onClick={onUnlog}
+        className="w-full flex items-center gap-3 opacity-50 hover:opacity-75 active:opacity-90 transition-opacity py-1"
+      >
         <span className="w-8 h-8 flex items-center justify-center rounded-full bg-emerald-600 text-white text-sm font-bold">
           {setNumber}
         </span>
         <span className="text-slate-300">{entry.weight} lbs &times; {entry.reps} reps</span>
         <CheckFilledIcon />
-      </div>
+        <span className="ml-auto text-xs text-slate-500">tap to edit</span>
+      </button>
     )
   }
 
@@ -379,6 +389,14 @@ export default function ActiveWorkout() {
     })
   }
 
+  const unlogSet = (exerciseId: string, setIndex: number) => {
+    setSetsMap((prev) => {
+      const copy = [...(prev[exerciseId] || [])]
+      copy[setIndex] = { ...copy[setIndex], logged: false }
+      return { ...prev, [exerciseId]: copy }
+    })
+  }
+
   // Derive completion state
   const allExercisesLogged = exercises.length > 0 && exercises.every((ex) => {
     const sets = setsMap[ex.id]
@@ -546,6 +564,7 @@ export default function ActiveWorkout() {
                 sets={setsMap[ex.id] || []}
                 onUpdateSet={(si, field, val) => updateSet(ex.id, si, field, val)}
                 onLogSet={(si) => logSet(ex.id, si)}
+                onUnlogSet={(si) => unlogSet(ex.id, si)}
                 videoUrl={exerciseVideos.get(ex.name)}
               />
             )
@@ -569,6 +588,7 @@ export default function ActiveWorkout() {
                   sets={setsMap[ex.id] || []}
                   onUpdateSet={(si, field, val) => updateSet(ex.id, si, field, val)}
                   onLogSet={(si) => logSet(ex.id, si)}
+                  onUnlogSet={(si) => unlogSet(ex.id, si)}
                   videoUrl={exerciseVideos.get(ex.name)}
                 />
               ))}

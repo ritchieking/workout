@@ -360,6 +360,91 @@ function PastPrograms() {
   )
 }
 
+// ── Copy Prompt Button ───────────────────────────────────────────
+
+const PROGRAM_PROMPT = `Generate a workout program as JSON. Output ONLY the raw JSON, no markdown fences or explanation.
+
+Use this exact schema:
+
+{
+  "name": "Program Name",
+  "description": "Brief description",
+  "start_date": "YYYY-MM-DD",
+  "cycles": [
+    {
+      "name": "Block Name",
+      "cycle_type": "hypertrophy | strength | deload | endurance",
+      "color": "#hex color",
+      "weeks": [
+        {
+          "week_number": 1,
+          "workouts": [
+            {
+              "name": "Workout Name",
+              "workout_type": "lifting | cardio | yoga | rest | other",
+              "muscle_group": "upper | lower | full | null",
+              "description": "Brief description",
+              "exercises": [
+                {
+                  "name": "Exercise Name",
+                  "sets": 3,
+                  "reps": 12,
+                  "body_region": "upper | lower",
+                  "superset_group": "A (optional, use same letter to pair exercises into supersets)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+Rules:
+- "exercises" array is only for lifting workouts. Omit it for cardio/yoga/rest/other.
+- "muscle_group" is required for lifting ("upper", "lower", or "full"), null for others.
+- "body_region" on each exercise is "upper" or "lower" (used for weight progression increments).
+- "superset_group" is optional. Exercises with the same letter (e.g. "A") are grouped as a superset.
+- Each week needs all 7 days as workouts (include rest days as workout_type "rest").
+- "start_date" should be the upcoming Monday.
+- Use distinct "color" hex values per cycle for calendar visualization.
+- week_number should increment continuously across all cycles (not restart per cycle).`
+
+function CopyPromptButton() {
+  const [copied, setCopied] = useState(false)
+
+  async function handleCopy() {
+    await navigator.clipboard.writeText(PROGRAM_PROMPT)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <div className="space-y-1.5">
+      <button
+        onClick={handleCopy}
+        className="w-full flex items-center justify-center gap-2 rounded-lg bg-slate-800 border border-slate-700 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-700 transition-colors"
+      >
+        {copied ? (
+          <>
+            <CheckSmallIcon />
+            Copied!
+          </>
+        ) : (
+          <>
+            <ClipboardIcon />
+            Copy prompt for workout formatting
+          </>
+        )}
+      </button>
+      <p className="text-xs text-slate-400">
+        Pasting this prompt into Claude when you generate your workout will ensure it gets formatted correctly.
+      </p>
+    </div>
+  )
+}
+
 // ── Import Program Modal ──────────────────────────────────────────
 
 function ImportProgramModal({
@@ -468,6 +553,7 @@ function ImportProgramModal({
         <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
           {!preview ? (
             <>
+              <CopyPromptButton />
               <textarea
                 value={json}
                 onChange={(e) => setJson(e.target.value)}
@@ -1035,6 +1121,22 @@ function XIcon() {
       strokeWidth={2}
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  )
+}
+
+function ClipboardIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+    </svg>
+  )
+}
+
+function CheckSmallIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
     </svg>
   )
 }

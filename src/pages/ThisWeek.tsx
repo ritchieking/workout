@@ -354,6 +354,7 @@ function CustomWorkoutCard({ log }: { log: WorkoutLog }) {
 
 // ─── Main Page ───────────────────────────────────────────────────────
 export default function ThisWeek() {
+  const navigate = useNavigate()
   const userId = useUser()
   const { program, loading: programLoading } = useActiveProgram(userId)
   const { week, loading: weekLoading, refresh } = useCurrentWeek(program?.id)
@@ -401,9 +402,15 @@ export default function ThisWeek() {
           </svg>
         </div>
         <h2 className="text-xl font-semibold text-white mb-2">No Active Program</h2>
-        <p className="text-slate-400 text-sm max-w-xs">
-          Head over to the <strong className="text-slate-300">Program</strong> tab to import a training plan and get started.
+        <p className="text-slate-400 text-sm max-w-xs mb-4">
+          Import a training plan to get started.
         </p>
+        <button
+          onClick={() => navigate(`/${userId}/program`)}
+          className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-500 active:bg-blue-700 transition-colors"
+        >
+          Go to Program
+        </button>
       </div>
     )
   }
@@ -418,9 +425,15 @@ export default function ThisWeek() {
           </svg>
         </div>
         <h2 className="text-xl font-semibold text-white mb-2">No Workouts This Week</h2>
-        <p className="text-slate-400 text-sm max-w-xs">
-          The current date does not fall within any week of your program. Check your program dates in the <strong className="text-slate-300">Program</strong> tab.
+        <p className="text-slate-400 text-sm max-w-xs mb-4">
+          The current date doesn't fall within any week of your program. Check your program dates.
         </p>
+        <button
+          onClick={() => navigate(`/${userId}/program`)}
+          className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-500 active:bg-blue-700 transition-colors"
+        >
+          Go to Program
+        </button>
       </div>
     )
   }
