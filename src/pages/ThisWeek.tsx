@@ -6,6 +6,7 @@ import {
   useCustomWorkoutLogs,
   logWorkoutComplete,
 } from '../lib/hooks'
+import { useUser } from '../lib/UserContext'
 import type { WorkoutWithStatus, WorkoutLog } from '../types'
 
 // ─── Type badge colors ───────────────────────────────────────────────
@@ -104,12 +105,14 @@ function AddCustomWorkoutModal({
   const [notes, setNotes] = useState('')
   const [saving, setSaving] = useState(false)
 
+  const userId = useUser()
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim()) return
 
     setSaving(true)
-    await logWorkoutComplete(null, weekId, name.trim(), type, null, [], notes || undefined, true)
+    await logWorkoutComplete(userId, null, weekId, name.trim(), type, null, [], notes || undefined, true)
     setSaving(false)
     onAdded()
     onClose()
@@ -247,6 +250,7 @@ function WorkoutCard({
   onWarningTrigger: (group: string) => void
 }) {
   const navigate = useNavigate()
+  const userId = useUser()
   const completed = !!workout.log
   const badge = getBadge(workout.workout_type)
   const summary = buildSummary(workout)
@@ -259,7 +263,7 @@ function WorkoutCard({
     ) {
       onWarningTrigger(workout.muscle_group)
     }
-    navigate(`/workout/${workout.id}`)
+    navigate(`/${userId}/workout/${workout.id}`)
   }
 
   return (
@@ -350,7 +354,8 @@ function CustomWorkoutCard({ log }: { log: WorkoutLog }) {
 
 // ─── Main Page ───────────────────────────────────────────────────────
 export default function ThisWeek() {
-  const { program, loading: programLoading } = useActiveProgram()
+  const userId = useUser()
+  const { program, loading: programLoading } = useActiveProgram(userId)
   const { week, loading: weekLoading, refresh } = useCurrentWeek(program?.id)
   const customLogs = useCustomWorkoutLogs(week?.id)
   const totalWeeks = useTotalWeeks(program?.id)

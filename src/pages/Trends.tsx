@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { supabase } from '../lib/supabase'
+import { useUser } from '../lib/UserContext'
 import type { WorkoutLog } from '../types'
 
 // ── Volume Line Chart ─────────────────────────────────────────────
@@ -22,6 +23,7 @@ const TIME_RANGES = [
 ] as const
 
 function VolumeChart() {
+  const userId = useUser()
   const [exercises, setExercises] = useState<string[]>([])
   const [selected, setSelected] = useState('')
   const [search, setSearch] = useState('')
@@ -34,14 +36,15 @@ function VolumeChart() {
   useEffect(() => {
     supabase
       .from('set_logs')
-      .select('exercise_name')
+      .select('exercise_name, workout_logs!inner(user_id)')
+      .eq('workout_logs.user_id', userId)
       .then(({ data }) => {
         if (!data) return
         const unique = [...new Set(data.map((r) => r.exercise_name))].sort()
         setExercises(unique)
         if (unique.length > 0 && !selected) setSelected(unique[0])
       })
-  }, [])
+  }, [userId])
 
   // Fetch volume data when exercise or range changes
   useEffect(() => {
@@ -51,8 +54,9 @@ function VolumeChart() {
     const range = TIME_RANGES[rangeIdx]
     let query = supabase
       .from('set_logs')
-      .select('weight, actual_reps, workout_log_id, workout_logs!inner(completed_at)')
+      .select('weight, actual_reps, workout_log_id, workout_logs!inner(completed_at, user_id)')
       .eq('exercise_name', selected)
+      .eq('workout_logs.user_id', userId)
       .order('created_at', { ascending: true })
 
     if (range.weeks > 0) {
@@ -89,7 +93,7 @@ function VolumeChart() {
       setVolumeData(points)
       setLoading(false)
     })
-  }, [selected, rangeIdx])
+  }, [selected, rangeIdx, userId])
 
   const filtered = useMemo(
     () =>
@@ -247,6 +251,7 @@ interface DayCell {
 }
 
 function CalendarHeatmap() {
+  const userId = useUser()
   const [cells, setCells] = useState<DayCell[]>([])
   const [selected, setSelected] = useState<DayCell | null>(null)
 
@@ -262,6 +267,7 @@ function CalendarHeatmap() {
     supabase
       .from('workout_logs')
       .select('completed_at, workout_type, name')
+      .eq('user_id', userId)
       .gte('completed_at', start.toISOString().split('T')[0])
       .order('completed_at', { ascending: true })
       .then(({ data: logs }) => {
@@ -287,7 +293,7 @@ function CalendarHeatmap() {
         }
         setCells(result)
       })
-  }, [])
+  }, [userId])
 
   // Group cells into weeks (columns)
   const weeks = useMemo(() => {

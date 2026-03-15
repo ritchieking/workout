@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useWorkoutDetails, useSuggestedWeight, useExerciseVideos, logWorkoutComplete } from '../lib/hooks'
+import { useUser } from '../lib/UserContext'
 import type { ProgrammedExercise } from '../types'
 
 // ─── Per-exercise set logging state ───────────────────────────────────────────
@@ -16,7 +17,8 @@ function SuggestionBadge({ exerciseName, prescribedReps, bodyRegion }: {
   prescribedReps: number
   bodyRegion: 'upper' | 'lower'
 }) {
-  const suggestion = useSuggestedWeight(exerciseName, prescribedReps, bodyRegion)
+  const userId = useUser()
+  const suggestion = useSuggestedWeight(exerciseName, prescribedReps, bodyRegion, userId)
   if (!suggestion) return null
 
   const increment = bodyRegion === 'upper' ? 5 : 10
@@ -229,7 +231,8 @@ function SetRow({
 
 // ─── Helper: build initial sets from suggestion / defaults ────────────────────
 function useInitialWeight(exerciseName: string, prescribedReps: number, bodyRegion: 'upper' | 'lower'): number {
-  const suggestion = useSuggestedWeight(exerciseName, prescribedReps, bodyRegion)
+  const userId = useUser()
+  const suggestion = useSuggestedWeight(exerciseName, prescribedReps, bodyRegion, userId)
   return suggestion?.weight ?? 0
 }
 
@@ -344,6 +347,7 @@ function CheckFilledIcon() {
 export default function ActiveWorkout() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const userId = useUser()
   const { workout, exercises, loading } = useWorkoutDetails(id)
   const exerciseVideos = useExerciseVideos()
 
@@ -404,6 +408,7 @@ export default function ActiveWorkout() {
     }
 
     await logWorkoutComplete(
+      userId,
       workout.id,
       workout.week_id,
       workout.name,
@@ -413,13 +418,14 @@ export default function ActiveWorkout() {
       partial ? 'Finished early' : undefined,
     )
 
-    navigate('/', { replace: true })
+    navigate(`/${userId}`, { replace: true })
   }
 
   const handleNonLiftingComplete = async () => {
     if (!workout) return
     setSubmitting(true)
     await logWorkoutComplete(
+      userId,
       workout.id,
       workout.week_id,
       workout.name,
@@ -427,7 +433,7 @@ export default function ActiveWorkout() {
       workout.muscle_group,
       [],
     )
-    navigate('/', { replace: true })
+    navigate(`/${userId}`, { replace: true })
   }
 
   // ── Loading state ─────────────────────────────────────────────────────────
@@ -445,7 +451,7 @@ export default function ActiveWorkout() {
         <p className="text-lg">Workout not found</p>
         <button
           type="button"
-          onClick={() => navigate('/')}
+          onClick={() => navigate(`/${userId}`)}
           className="px-6 py-3 rounded-xl bg-blue-600 active:bg-blue-500 text-white font-medium"
         >
           Go Back

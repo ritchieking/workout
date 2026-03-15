@@ -30,7 +30,7 @@ export function useExerciseVideos() {
   return videos
 }
 
-export function useActiveProgram() {
+export function useActiveProgram(userId: string) {
   const [program, setProgram] = useState<Program | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -39,12 +39,13 @@ export function useActiveProgram() {
       .from('programs')
       .select('*')
       .eq('is_active', true)
+      .eq('user_id', userId)
       .limit(1)
       .then(({ data }) => {
         setProgram(data?.[0] ?? null)
         setLoading(false)
       })
-  }, [])
+  }, [userId])
 
   return { program, loading }
 }
@@ -126,7 +127,7 @@ export function useWorkoutDetails(workoutId: string | undefined) {
   return { workout, exercises, loading }
 }
 
-export function useExerciseHistory(exerciseName: string) {
+export function useExerciseHistory(exerciseName: string, userId: string) {
   const [history, setHistory] = useState<SetLog[]>([])
 
   useEffect(() => {
@@ -134,21 +135,22 @@ export function useExerciseHistory(exerciseName: string) {
 
     supabase
       .from('set_logs')
-      .select('*, workout_logs!inner(completed_at)')
+      .select('*, workout_logs!inner(completed_at, user_id)')
       .eq('exercise_name', exerciseName)
+      .eq('workout_logs.user_id', userId)
       .order('created_at', { ascending: false })
       .limit(100)
       .then(({ data }) => {
         setHistory(data || [])
       })
-  }, [exerciseName])
+  }, [exerciseName, userId])
 
   return history
 }
 
-export function useSuggestedWeight(exerciseName: string, _prescribedReps: number, bodyRegion: 'upper' | 'lower') {
+export function useSuggestedWeight(exerciseName: string, _prescribedReps: number, bodyRegion: 'upper' | 'lower', userId: string) {
   const [suggestion, setSuggestion] = useState<{ weight: number; reason: string } | null>(null)
-  const history = useExerciseHistory(exerciseName)
+  const history = useExerciseHistory(exerciseName, userId)
 
   useEffect(() => {
     if (history.length === 0) {
@@ -195,6 +197,7 @@ export function useSuggestedWeight(exerciseName: string, _prescribedReps: number
 }
 
 export async function logWorkoutComplete(
+  userId: string,
   programmedWorkoutId: string | null,
   weekId: string | null,
   name: string,
@@ -216,6 +219,7 @@ export async function logWorkoutComplete(
       notes,
       is_custom: isCustom,
       completed_at: completedAt ?? new Date().toISOString(),
+      user_id: userId,
     })
     .select()
     .single()
@@ -236,9 +240,9 @@ export async function logWorkoutComplete(
   return log
 }
 
-export async function importProgram(data: ProgramImport) {
-  // Archive current active program
-  await supabase.from('programs').update({ is_active: false }).eq('is_active', true)
+export async function importProgram(data: ProgramImport, userId: string) {
+  // Archive current active program for this user
+  await supabase.from('programs').update({ is_active: false }).eq('is_active', true).eq('user_id', userId)
 
   // Calculate end date
   const totalWeeks = data.cycles.reduce((sum, c) => sum + c.weeks.length, 0)
@@ -254,6 +258,7 @@ export async function importProgram(data: ProgramImport) {
       start_date: data.start_date,
       end_date: endDate.toISOString().split('T')[0],
       is_active: true,
+      user_id: userId,
     })
     .select()
     .single()

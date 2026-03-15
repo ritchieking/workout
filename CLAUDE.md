@@ -7,7 +7,7 @@
 
 ## Project Overview
 
-Personal workout tracking PWA. Single user, no authentication. Users import JSON training programs and log workouts week by week with per-set tracking for lifting.
+Personal workout tracking PWA. Multi-user via URL path prefix (`/ritchie`, `/emily`), no authentication. Users import JSON training programs and log workouts week by week with per-set tracking for lifting. User is determined by URL path and stored in React context (`useUser()`).
 
 ## Tech Stack
 
@@ -20,10 +20,11 @@ Personal workout tracking PWA. Single user, no authentication. Users import JSON
 ## Key Files
 
 - `src/types.ts` — all TypeScript types (DB models + JSON import format)
-- `src/lib/hooks.ts` — data hooks (`useActiveProgram`, `useCurrentWeek`, `useWorkoutDetails`, `useSuggestedWeight`) + functions (`logWorkoutComplete`, `importProgram`)
+- `src/lib/hooks.ts` — data hooks (`useActiveProgram`, `useCurrentWeek`, `useWorkoutDetails`, `useSuggestedWeight`) + functions (`logWorkoutComplete`, `importProgram`). Most hooks/functions take `userId` as a parameter.
+- `src/lib/UserContext.tsx` — React context for current user (`useUser()`, `UserProvider`, `VALID_USERS`)
 - `src/lib/supabase.ts` — Supabase client init
 - `src/components/Layout.tsx` — bottom tab bar shell
-- `src/pages/` — ThisWeek, ActiveWorkout, Trends, ProgramOverview
+- `src/pages/` — UserSelect, ThisWeek, ActiveWorkout, Trends, ProgramOverview
 - `supabase-schema.sql` — full DB schema (programs, cycles, weeks, programmed_workouts, programmed_exercises, workout_logs, set_logs)
 
 ## Design Principles
@@ -42,5 +43,5 @@ Located in `useSuggestedWeight` in `src/lib/hooks.ts`:
 
 ## DB Tables
 
-`programs` → `cycles` → `weeks` → `programmed_workouts` → `programmed_exercises`
-`workout_logs` → `set_logs` (actual logged data)
+`programs` (has `user_id`) → `cycles` → `weeks` → `programmed_workouts` → `programmed_exercises`
+`workout_logs` (has `user_id`) → `set_logs` (actual logged data)

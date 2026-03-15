@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { useActiveProgram, logWorkoutComplete, deleteWorkoutLog } from '../lib/hooks'
 import { importProgram } from '../lib/hooks'
+import { useUser } from '../lib/UserContext'
 import type { Program, Cycle, Week, WorkoutLog, ProgrammedWorkout, ProgramImport } from '../types'
 
 // ── Current Position Banner ───────────────────────────────────────
@@ -251,6 +252,7 @@ function CalendarGrid({
 // ── Past Programs ─────────────────────────────────────────────────
 
 function PastPrograms() {
+  const userId = useUser()
   const [programs, setPrograms] = useState<
     (Program & { totalWorkouts: number; completionRate: number })[]
   >([])
@@ -261,6 +263,7 @@ function PastPrograms() {
       .from('programs')
       .select('*')
       .eq('is_active', false)
+      .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .then(async ({ data }) => {
         if (!data || data.length === 0) {
@@ -311,7 +314,7 @@ function PastPrograms() {
         setPrograms(enriched)
         setLoading(false)
       })
-  }, [])
+  }, [userId])
 
   if (loading) {
     return (
@@ -409,12 +412,14 @@ function ImportProgramModal({
     }
   }
 
+  const userId = useUser()
+
   const handleImport = async () => {
     if (!preview) return
     setImporting(true)
     setError('')
     try {
-      await importProgram(preview)
+      await importProgram(preview, userId)
       onImported()
       onClose()
       setJson('')
@@ -577,6 +582,7 @@ function DayDetailModal({
   onClose: () => void
   onChanged: () => void
 }) {
+  const userId = useUser()
   const [programmedWorkouts, setProgrammedWorkouts] = useState<ProgrammedWorkout[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -620,6 +626,7 @@ function DayDetailModal({
   async function handleLogProgrammed(pw: ProgrammedWorkout) {
     setSaving(true)
     await logWorkoutComplete(
+      userId,
       pw.id,
       pw.week_id,
       pw.name,
@@ -646,6 +653,7 @@ function DayDetailModal({
     if (!customName.trim()) return
     setSaving(true)
     await logWorkoutComplete(
+      userId,
       null,
       week?.id ?? null,
       customName.trim(),
@@ -838,7 +846,8 @@ function DayDetailModal({
 // ── Page ──────────────────────────────────────────────────────────
 
 export default function ProgramOverview() {
-  const { program, loading: programLoading } = useActiveProgram()
+  const userId = useUser()
+  const { program, loading: programLoading } = useActiveProgram(userId)
   const [cycles, setCycles] = useState<Cycle[]>([])
   const [weeks, setWeeks] = useState<Week[]>([])
   const [loading, setLoading] = useState(true)

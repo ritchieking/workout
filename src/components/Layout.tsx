@@ -1,12 +1,15 @@
 import { Outlet, NavLink } from 'react-router-dom'
-
-const tabs = [
-  { to: '/', label: 'This Week', icon: CalendarIcon },
-  { to: '/trends', label: 'Trends', icon: TrendIcon },
-  { to: '/program', label: 'Program', icon: ListIcon },
-]
+import { useUser } from '../lib/UserContext'
 
 export default function Layout() {
+  const user = useUser()
+
+  const tabs = [
+    { to: `/${user}`, label: 'This Week', icon: CalendarIcon, end: true },
+    { to: `/${user}/trends`, label: 'Trends', icon: TrendIcon, end: false },
+    { to: `/${user}/program`, label: 'Program', icon: ListIcon, end: false },
+  ]
+
   return (
     <div className="flex flex-col min-h-dvh bg-slate-950">
       <main className="flex-1 pb-20 overflow-y-auto safe-top">
@@ -18,6 +21,7 @@ export default function Layout() {
             <NavLink
               key={tab.to}
               to={tab.to}
+              end={tab.end}
               className={({ isActive }) =>
                 `flex flex-col items-center gap-1 px-4 py-2 text-xs font-medium transition-colors ${
                   isActive ? 'text-blue-400' : 'text-slate-400'
