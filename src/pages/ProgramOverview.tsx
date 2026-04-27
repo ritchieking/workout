@@ -1,9 +1,17 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { useActiveProgram, logWorkoutComplete, deleteWorkoutLog } from '../lib/hooks'
-import { importProgram } from '../lib/hooks'
+import {
+  useActiveProgram,
+  logWorkoutComplete,
+  deleteWorkoutLog,
+  importProgram,
+  deleteProgram,
+  reactivateProgram,
+  programHasLogs,
+} from '../lib/hooks'
 import { useUser } from '../lib/UserContext'
+import CreateProgramModal from './CreateProgramModal'
 import type { Program, Cycle, Week, WorkoutLog, ProgrammedWorkout, ProgramImport } from '../types'
 
 // ── Current Position Banner ───────────────────────────────────────
@@ -12,11 +20,20 @@ function CurrentPositionBanner({
   program,
   cycles,
   weeks,
+  onDeleted,
 }: {
   program: Program
   cycles: Cycle[]
   weeks: Week[]
+  onDeleted: () => void
 }) {
+  const [hasLogs, setHasLogs] = useState<boolean | null>(null)
+  const [confirming, setConfirming] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+
+  useEffect(() => {
+    programHasLogs(program.id).then(setHasLogs)
+  }, [program.id])
   const today = new Date().toISOString().split('T')[0]
 
   const currentWeek = weeks.find(
@@ -78,6 +95,41 @@ function CurrentPositionBanner({
         <p className="text-sm text-amber-400/80">
           You're between weeks or the program hasn't started yet.
         </p>
+      )}
+
+      {/* Delete active program */}
+      {hasLogs === false && !confirming && (
+        <button
+          onClick={() => setConfirming(true)}
+          className="text-xs text-slate-500 hover:text-red-400 transition-colors"
+        >
+          Delete program
+        </button>
+      )}
+      {hasLogs === true && (
+        <p className="text-xs text-slate-600">Can't delete — has logged workouts</p>
+      )}
+      {confirming && (
+        <div className="flex items-center gap-3 text-xs">
+          <span className="text-red-400">Delete this program?</span>
+          <button
+            onClick={async () => {
+              setDeleting(true)
+              await deleteProgram(program.id)
+              onDeleted()
+            }}
+            disabled={deleting}
+            className="font-medium text-red-400 hover:text-red-300 disabled:opacity-40"
+          >
+            {deleting ? 'Deleting...' : 'Yes, delete'}
+          </button>
+          <button
+            onClick={() => setConfirming(false)}
+            className="font-medium text-slate-400 hover:text-slate-200"
+          >
+            Cancel
+          </button>
+        </div>
       )}
     </section>
   )
@@ -252,12 +304,14 @@ function CalendarGrid({
 
 // ── Past Programs ─────────────────────────────────────────────────
 
-function PastPrograms() {
+function PastPrograms({ onChanged }: { onChanged: () => void }) {
   const userId = useUser()
   const [programs, setPrograms] = useState<
-    (Program & { totalWorkouts: number; completionRate: number })[]
+    (Program & { totalWorkouts: number; completionRate: number; hasLogs: boolean })[]
   >([])
   const [loading, setLoading] = useState(true)
+  const [confirmId, setConfirmId] = useState<string | null>(null)
+  const [acting, setActing] = useState(false)
 
   useEffect(() => {
     supabase
@@ -268,38 +322,29 @@ function PastPrograms() {
       .order('created_at', { ascending: false })
       .then(async ({ data }) => {
         if (!data || data.length === 0) {
+          setPrograms([])
           setLoading(false)
           return
         }
 
         const enriched = await Promise.all(
           data.map(async (p: Program) => {
-            // Total programmed workouts (excluding rest)
+            const weekIds = await supabase
+              .from('weeks')
+              .select('id')
+              .eq('program_id', p.id)
+              .then(({ data: w }) => (w || []).map((r) => r.id))
+
             const { count: programmedCount } = await supabase
               .from('programmed_workouts')
               .select('id', { count: 'exact', head: true })
-              .in(
-                'week_id',
-                await supabase
-                  .from('weeks')
-                  .select('id')
-                  .eq('program_id', p.id)
-                  .then(({ data: w }) => (w || []).map((r) => r.id))
-              )
+              .in('week_id', weekIds)
               .neq('workout_type', 'rest')
 
-            // Completed workouts
             const { count: completedCount } = await supabase
               .from('workout_logs')
               .select('id', { count: 'exact', head: true })
-              .in(
-                'week_id',
-                await supabase
-                  .from('weeks')
-                  .select('id')
-                  .eq('program_id', p.id)
-                  .then(({ data: w }) => (w || []).map((r) => r.id))
-              )
+              .in('week_id', weekIds)
 
             const total = programmedCount ?? 0
             const completed = completedCount ?? 0
@@ -308,6 +353,7 @@ function PastPrograms() {
               ...p,
               totalWorkouts: completed,
               completionRate: total > 0 ? Math.round((completed / total) * 100) : 0,
+              hasLogs: completed > 0,
             }
           })
         )
@@ -316,6 +362,20 @@ function PastPrograms() {
         setLoading(false)
       })
   }, [userId])
+
+  async function handleReactivate(programId: string) {
+    setActing(true)
+    await reactivateProgram(programId, userId)
+    onChanged()
+  }
+
+  async function handleDelete(programId: string) {
+    setActing(true)
+    await deleteProgram(programId)
+    setPrograms((prev) => prev.filter((p) => p.id !== programId))
+    setConfirmId(null)
+    setActing(false)
+  }
 
   if (loading) {
     return (
@@ -343,7 +403,7 @@ function PastPrograms() {
         {programs.map((p) => (
           <div
             key={p.id}
-            className="rounded-lg bg-slate-800/60 border border-slate-700 p-3 space-y-1"
+            className="rounded-lg bg-slate-800/60 border border-slate-700 p-3 space-y-2"
           >
             <h3 className="text-sm font-medium text-slate-200">{p.name}</h3>
             <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-slate-400">
@@ -354,6 +414,45 @@ function PastPrograms() {
               <span>{p.totalWorkouts} workouts</span>
               <span>{p.completionRate}% complete</span>
             </div>
+
+            {confirmId === p.id ? (
+              <div className="flex items-center gap-3 text-xs">
+                <span className="text-red-400">Delete this program?</span>
+                <button
+                  onClick={() => handleDelete(p.id)}
+                  disabled={acting}
+                  className="font-medium text-red-400 hover:text-red-300 disabled:opacity-40"
+                >
+                  {acting ? 'Deleting...' : 'Yes, delete'}
+                </button>
+                <button
+                  onClick={() => setConfirmId(null)}
+                  className="font-medium text-slate-400 hover:text-slate-200"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 text-xs">
+                <button
+                  onClick={() => handleReactivate(p.id)}
+                  disabled={acting}
+                  className="font-medium text-blue-400 hover:text-blue-300 disabled:opacity-40"
+                >
+                  Reactivate
+                </button>
+                {!p.hasLogs ? (
+                  <button
+                    onClick={() => setConfirmId(p.id)}
+                    className="font-medium text-slate-500 hover:text-red-400 transition-colors"
+                  >
+                    Delete
+                  </button>
+                ) : (
+                  <span className="text-slate-600">Can't delete — has logs</span>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -363,35 +462,48 @@ function PastPrograms() {
 
 // ── Copy Prompt Button ───────────────────────────────────────────
 
-const PROGRAM_PROMPT = `Generate a workout program as JSON. Output ONLY the raw JSON, no markdown fences or explanation.
+const PROGRAM_PROMPT = `I need you to generate a workout program as JSON for my workout tracking app. I'll describe what I want below, and you output ONLY the raw JSON (no markdown fences, no explanation).
 
-Use this exact schema:
+**Tell me about:**
+- [YOUR GOALS: e.g. fat loss, muscle gain, strength, general fitness]
+- [EQUIPMENT AVAILABLE: e.g. dumbbells only, full gym, bodyweight only]
+- [SCHEDULE: e.g. 4 days lifting + 2 cardio + 1 rest, or 3 full body + 2 cardio]
+- [PROGRAM LENGTH: e.g. 8 weeks, 12 weeks]
+- [ANY PREFERENCES: e.g. upper/lower split, push/pull/legs, supersets, specific exercises to include/avoid]
+
+**How the program structure works:**
+
+The program is divided into "cycles" (training blocks/phases, e.g. "Foundation" → "Intensification" → "Peak"). Each cycle contains one or more weeks. Within a cycle, the weekly workout template typically stays the same (same exercises, same structure) but you can adjust sets/reps across weeks for progression. If exercises change week-to-week, each week needs its own full workout list.
+
+Every week must have exactly 7 workouts (one per day), including rest days.
+
+**JSON schema:**
 
 {
   "name": "Program Name",
-  "description": "Brief description",
-  "start_date": "YYYY-MM-DD",
+  "description": "Brief program description with split type and equipment",
+  "start_date": "YYYY-MM-DD (use the upcoming Monday)",
   "cycles": [
     {
-      "name": "Block Name",
+      "name": "Phase/Block Name",
       "cycle_type": "hypertrophy | strength | deload | endurance",
-      "color": "#hex color",
+      "color": "#hex (use distinct colors per cycle)",
       "weeks": [
         {
           "week_number": 1,
           "workouts": [
             {
-              "name": "Workout Name",
+              "name": "e.g. Upper Body A",
               "workout_type": "lifting | cardio | yoga | rest | other",
-              "muscle_group": "upper | lower | full | null",
-              "description": "Brief description",
+              "muscle_group": "upper | lower | full (required for lifting, null for others)",
+              "description": "Brief description of the session",
               "exercises": [
                 {
                   "name": "Exercise Name",
                   "sets": 3,
                   "reps": 12,
                   "body_region": "upper | lower",
-                  "superset_group": "A (optional, use same letter to pair exercises into supersets)"
+                  "superset_group": "A (optional — exercises sharing a letter are done as a superset)"
                 }
               ]
             }
@@ -402,15 +514,14 @@ Use this exact schema:
   ]
 }
 
-Rules:
-- "exercises" array is only for lifting workouts. Omit it for cardio/yoga/rest/other.
-- "muscle_group" is required for lifting ("upper", "lower", or "full"), null for others.
-- "body_region" on each exercise is "upper" or "lower" (used for weight progression increments).
-- "superset_group" is optional. Exercises with the same letter (e.g. "A") are grouped as a superset.
-- Each week needs all 7 days as workouts (include rest days as workout_type "rest").
-- "start_date" should be the upcoming Monday.
-- Use distinct "color" hex values per cycle for calendar visualization.
-- week_number should increment continuously across all cycles (not restart per cycle).`
+**Important rules:**
+- "exercises" array is ONLY for lifting workouts. Omit it for cardio/yoga/rest/other.
+- "body_region" is per exercise: "upper" or "lower" (the app uses this for weight progression — 5 lb increments for upper, 10 lb for lower).
+- "week_number" increments continuously across ALL cycles (1, 2, 3... not restarting per cycle).
+- Each week should include all planned sessions plus rest days. A typical week has 7 entries (one per day), but can have more if a day includes separate sessions (e.g. lifting + cardio). Always include at least one rest day.
+- If multiple weeks in a cycle have the same exercises, you still need to output each week's full workout list.
+- For progressive overload: you can vary sets/reps across weeks within a cycle (e.g. week 1: 3x12, week 2: 3x10, week 3: 4x8).
+- Include a deload week every 4–6 weeks if the program is long enough.`
 
 function CopyPromptButton() {
   const [copied, setCopied] = useState(false)
@@ -940,6 +1051,7 @@ export default function ProgramOverview() {
   const [weeks, setWeeks] = useState<Week[]>([])
   const [loading, setLoading] = useState(true)
   const [importOpen, setImportOpen] = useState(false)
+  const [createOpen, setCreateOpen] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [logsByDate, setLogsByDate] = useState<Map<string, WorkoutLog[]>>(new Map())
@@ -1013,13 +1125,21 @@ export default function ProgramOverview() {
     <div className="px-4 pt-6 pb-4 max-w-lg mx-auto space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Program</h1>
-        <button
-          onClick={() => setImportOpen(true)}
-          className="flex items-center gap-1.5 rounded-lg bg-slate-800 border border-slate-700 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-slate-700 transition-colors"
-        >
-          <ImportIcon />
-          Import
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setCreateOpen(true)}
+            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white hover:bg-blue-500 transition-colors"
+          >
+            + Create
+          </button>
+          <button
+            onClick={() => setImportOpen(true)}
+            className="flex items-center gap-1.5 rounded-lg bg-slate-800 border border-slate-700 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-slate-700 transition-colors"
+          >
+            <ImportIcon />
+            Import
+          </button>
+        </div>
       </div>
 
       {program ? (
@@ -1028,6 +1148,7 @@ export default function ProgramOverview() {
             program={program}
             cycles={cycles}
             weeks={weeks}
+            onDeleted={handleImported}
           />
           <CalendarGrid
             program={program}
@@ -1040,16 +1161,24 @@ export default function ProgramOverview() {
       ) : (
         <div className="rounded-xl bg-slate-800/60 border border-slate-700 p-6 text-center space-y-3">
           <p className="text-slate-400 text-sm">No active program</p>
-          <button
-            onClick={() => setImportOpen(true)}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
-          >
-            Import Program
-          </button>
+          <div className="flex gap-2 justify-center">
+            <button
+              onClick={() => setCreateOpen(true)}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 transition-colors"
+            >
+              Create Program
+            </button>
+            <button
+              onClick={() => setImportOpen(true)}
+              className="rounded-lg bg-slate-800 border border-slate-700 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-700 transition-colors"
+            >
+              Import JSON
+            </button>
+          </div>
         </div>
       )}
 
-      <PastPrograms />
+      <PastPrograms onChanged={handleImported} />
 
       {/* Switch user */}
       <button
@@ -1066,6 +1195,12 @@ export default function ProgramOverview() {
         open={importOpen}
         onClose={() => setImportOpen(false)}
         onImported={handleImported}
+      />
+
+      <CreateProgramModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreated={handleImported}
       />
 
       {selectedDate && (

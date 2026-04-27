@@ -370,6 +370,46 @@ export async function deleteWorkoutLog(logId: string) {
   if (error) throw error
 }
 
+export async function programHasLogs(programId: string): Promise<boolean> {
+  const { data: weekIds } = await supabase
+    .from('weeks')
+    .select('id')
+    .eq('program_id', programId)
+
+  if (!weekIds || weekIds.length === 0) return false
+
+  const { count } = await supabase
+    .from('workout_logs')
+    .select('id', { count: 'exact', head: true })
+    .in('week_id', weekIds.map((w) => w.id))
+
+  return (count ?? 0) > 0
+}
+
+export async function deleteProgram(programId: string) {
+  const { error } = await supabase
+    .from('programs')
+    .delete()
+    .eq('id', programId)
+  if (error) throw error
+}
+
+export async function reactivateProgram(programId: string, userId: string) {
+  // Deactivate current active program for this user
+  await supabase
+    .from('programs')
+    .update({ is_active: false })
+    .eq('is_active', true)
+    .eq('user_id', userId)
+
+  // Activate the selected program
+  const { error } = await supabase
+    .from('programs')
+    .update({ is_active: true })
+    .eq('id', programId)
+  if (error) throw error
+}
+
 export function useCustomWorkoutLogs(weekId: string | undefined) {
   const [logs, setLogs] = useState<WorkoutLog[]>([])
 
