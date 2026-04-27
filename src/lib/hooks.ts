@@ -329,6 +329,7 @@ export async function importProgram(data: ProgramImport, userId: string) {
               reps: ex.reps,
               body_region: ex.body_region,
               superset_group: ex.superset_group ?? null,
+              slot_key: `${workout.name}:${ei}`,
               order_index: ei,
             }))
           )
