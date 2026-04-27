@@ -4,8 +4,10 @@ import type {
   Program,
   ProgrammedWorkout,
   ProgrammedExercise,
+  ProgrammedExerciseWithOverride,
   WorkoutLog,
   SetLog,
+  ExerciseOverride,
   WeekWithWorkouts,
   ProgramImport,
 } from '../types'
@@ -84,9 +86,18 @@ export function useCurrentWeek(programId: string | undefined) {
           .select('*')
           .eq('week_id', weekData.id)
 
+        const { data: overrides } = await supabase
+          .from('exercise_overrides')
+          .select('*')
+          .eq('program_id', programId)
+        const overrideBySlot = new Map((overrides || []).map((o) => [o.slot_key, o]))
+
         const enriched = (workouts || []).map((w: ProgrammedWorkout & { programmed_exercises?: ProgrammedExercise[] }) => ({
           ...w,
-          exercises: w.programmed_exercises || [],
+          exercises: (w.programmed_exercises || []).map((e): ProgrammedExerciseWithOverride => {
+            const ov = overrideBySlot.get(e.slot_key)
+            return ov ? { ...e, name: ov.substitute_name, override: ov, original_name: e.name } : e
+          }),
           log: (logs || []).find((l: WorkoutLog) => l.programmed_workout_id === w.id),
         }))
 
@@ -106,25 +117,112 @@ export function useCurrentWeek(programId: string | undefined) {
   return { week, loading, refresh }
 }
 
-export function useWorkoutDetails(workoutId: string | undefined) {
-  const [workout, setWorkout] = useState<ProgrammedWorkout | null>(null)
-  const [exercises, setExercises] = useState<ProgrammedExercise[]>([])
+export function useExerciseOverrides(programId: string | undefined) {
+  const [overrides, setOverrides] = useState<ExerciseOverride[]>([])
   const [loading, setLoading] = useState(true)
 
+  const refresh = useCallback(() => {
+    if (!programId) {
+      setOverrides([])
+      setLoading(false)
+      return
+    }
+    setLoading(true)
+    supabase
+      .from('exercise_overrides')
+      .select('*')
+      .eq('program_id', programId)
+      .then(({ data }) => {
+        setOverrides(data || [])
+        setLoading(false)
+      })
+  }, [programId])
+
   useEffect(() => {
+    refresh()
+  }, [refresh])
+
+  return { overrides, loading, refresh }
+}
+
+export async function swapSlot(
+  programId: string,
+  userId: string,
+  slotKey: string,
+  substituteName: string
+) {
+  const { error } = await supabase.from('exercise_overrides').upsert(
+    {
+      program_id: programId,
+      user_id: userId,
+      slot_key: slotKey,
+      substitute_name: substituteName,
+    },
+    { onConflict: 'program_id,slot_key' }
+  )
+  if (error) throw error
+}
+
+export async function revertSlot(programId: string, slotKey: string) {
+  const { error } = await supabase
+    .from('exercise_overrides')
+    .delete()
+    .eq('program_id', programId)
+    .eq('slot_key', slotKey)
+  if (error) throw error
+}
+
+export async function addCustomExerciseName(name: string) {
+  const trimmed = name.trim()
+  if (!trimmed) return
+  const { error } = await supabase
+    .from('exercise_videos')
+    .upsert({ name: trimmed }, { onConflict: 'name', ignoreDuplicates: true })
+  if (error) throw error
+}
+
+export function useWorkoutDetails(workoutId: string | undefined) {
+  const [workout, setWorkout] = useState<ProgrammedWorkout | null>(null)
+  const [exercises, setExercises] = useState<ProgrammedExerciseWithOverride[]>([])
+  const [programId, setProgramId] = useState<string | undefined>(undefined)
+  const [loading, setLoading] = useState(true)
+
+  const refresh = useCallback(() => {
     if (!workoutId) return
+    setLoading(true)
 
     Promise.all([
-      supabase.from('programmed_workouts').select('*').eq('id', workoutId).single(),
+      supabase.from('programmed_workouts').select('*, weeks!inner(program_id)').eq('id', workoutId).single(),
       supabase.from('programmed_exercises').select('*').eq('workout_id', workoutId).order('order_index'),
-    ]).then(([{ data: w }, { data: ex }]) => {
-      setWorkout(w)
-      setExercises(ex || [])
+    ]).then(async ([{ data: w }, { data: ex }]) => {
+      const pid = (w as unknown as { weeks: { program_id: string } } | null)?.weeks?.program_id
+      setWorkout(w as ProgrammedWorkout | null)
+      setProgramId(pid)
+
+      let overrides: ExerciseOverride[] = []
+      if (pid) {
+        const { data } = await supabase
+          .from('exercise_overrides')
+          .select('*')
+          .eq('program_id', pid)
+        overrides = data || []
+      }
+
+      const overrideBySlot = new Map(overrides.map((o) => [o.slot_key, o]))
+      const enriched: ProgrammedExerciseWithOverride[] = (ex || []).map((e: ProgrammedExercise) => {
+        const ov = overrideBySlot.get(e.slot_key)
+        return ov ? { ...e, name: ov.substitute_name, override: ov, original_name: e.name } : e
+      })
+      setExercises(enriched)
       setLoading(false)
     })
   }, [workoutId])
 
-  return { workout, exercises, loading }
+  useEffect(() => {
+    refresh()
+  }, [refresh])
+
+  return { workout, exercises, programId, loading, refresh }
 }
 
 export function useExerciseHistory(exerciseName: string, userId: string) {
