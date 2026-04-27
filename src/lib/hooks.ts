@@ -206,7 +206,8 @@ export async function logWorkoutComplete(
   sets: { exerciseName: string; setNumber: number; prescribedReps: number; actualReps: number; weight: number }[],
   notes?: string,
   isCustom = false,
-  completedAt?: string
+  completedAt?: string,
+  skipped: { exerciseName: string; prescribedReps: number }[] = []
 ) {
   const { data: log } = await supabase
     .from('workout_logs')
@@ -224,17 +225,30 @@ export async function logWorkoutComplete(
     .select()
     .single()
 
-  if (log && sets.length > 0) {
-    await supabase.from('set_logs').insert(
-      sets.map((s) => ({
+  if (log) {
+    const rows = [
+      ...sets.map((s) => ({
         workout_log_id: log.id,
         exercise_name: s.exerciseName,
         set_number: s.setNumber,
         prescribed_reps: s.prescribedReps,
         actual_reps: s.actualReps,
         weight: s.weight,
-      }))
-    )
+        status: 'logged' as const,
+      })),
+      ...skipped.map((s) => ({
+        workout_log_id: log.id,
+        exercise_name: s.exerciseName,
+        set_number: 1,
+        prescribed_reps: s.prescribedReps,
+        actual_reps: 0,
+        weight: 0,
+        status: 'skipped' as const,
+      })),
+    ]
+    if (rows.length > 0) {
+      await supabase.from('set_logs').insert(rows)
+    }
   }
 
   return log
