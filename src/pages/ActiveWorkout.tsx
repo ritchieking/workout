@@ -1,8 +1,17 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useWorkoutDetails, useLastSessionData, useExerciseVideos, logWorkoutComplete } from '../lib/hooks'
+import {
+  useWorkoutDetails,
+  useLastSessionData,
+  useExerciseVideos,
+  logWorkoutComplete,
+  swapSlot,
+  revertSlot,
+  addCustomExerciseName,
+} from '../lib/hooks'
+import { supabase } from '../lib/supabase'
 import { useUser } from '../lib/UserContext'
-import type { ProgrammedExercise } from '../types'
+import type { ProgrammedExercise, ProgrammedExerciseWithOverride } from '../types'
 
 // ─── Per-exercise set logging state ───────────────────────────────────────────
 interface SetEntry {
@@ -40,6 +49,168 @@ function formatShortDate(iso: string): string {
   return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 }
 
+// ─── Sub-component: swap sheet ────────────────────────────────────────────────
+function SwapSheet({
+  open,
+  currentName,
+  onClose,
+  onSelect,
+}: {
+  open: boolean
+  currentName: string
+  onClose: () => void
+  onSelect: (name: string) => void
+}) {
+  const [query, setQuery] = useState('')
+  const [allNames, setAllNames] = useState<string[]>([])
+  const [showAdd, setShowAdd] = useState(false)
+  const [newName, setNewName] = useState('')
+
+  useEffect(() => {
+    if (!open) return
+    supabase
+      .from('exercise_videos')
+      .select('name')
+      .order('name')
+      .then(({ data }) => setAllNames((data || []).map((r: { name: string }) => r.name)))
+  }, [open])
+
+  if (!open) return null
+
+  const filtered = allNames
+    .filter((n) => n !== currentName)
+    .filter((n) => n.toLowerCase().includes(query.toLowerCase()))
+
+  const handleAdd = async () => {
+    const trimmed = newName.trim()
+    if (!trimmed) return
+    await addCustomExerciseName(trimmed)
+    onSelect(trimmed)
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end bg-black/60" onClick={onClose}>
+      <div
+        className="w-full bg-slate-900 rounded-t-3xl p-5 max-h-[85vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-lg font-semibold text-white">Swap exercise</h3>
+          <button type="button" onClick={onClose} className="text-slate-400 active:text-slate-200 text-xl">&times;</button>
+        </div>
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search exercises..."
+          className="w-full px-4 py-3 mb-3 rounded-xl bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        />
+        <div className="flex-1 overflow-y-auto space-y-1">
+          {!showAdd ? (
+            <button
+              type="button"
+              onClick={() => setShowAdd(true)}
+              className="w-full text-left px-4 py-3 rounded-xl bg-blue-600/20 text-blue-300 active:bg-blue-600/40 font-medium"
+            >
+              + Add new exercise
+            </button>
+          ) : (
+            <div className="px-4 py-3 rounded-xl bg-blue-600/20 space-y-2">
+              <input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="Exercise name"
+                autoFocus
+                className="w-full px-3 py-2 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none"
+              />
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  disabled={!newName.trim()}
+                  className="flex-1 py-2 rounded-lg bg-blue-600 active:bg-blue-500 disabled:opacity-50 text-white font-medium"
+                >
+                  Add &amp; select
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowAdd(false); setNewName('') }}
+                  className="px-3 py-2 rounded-lg bg-slate-700 active:bg-slate-600 text-slate-300"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+          {filtered.map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => onSelect(n)}
+              className="w-full text-left px-4 py-3 rounded-xl text-white active:bg-slate-800"
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Sub-component: menu sheet ────────────────────────────────────────────────
+function MenuSheet({
+  open,
+  hasOverride,
+  isSkipped,
+  onClose,
+  onSwap,
+  onSkip,
+  onRevert,
+  onUnskip,
+}: {
+  open: boolean
+  hasOverride: boolean
+  isSkipped: boolean
+  onClose: () => void
+  onSwap: () => void
+  onSkip: () => void
+  onRevert: () => void
+  onUnskip: () => void
+}) {
+  if (!open) return null
+  return (
+    <div className="fixed inset-0 z-40 flex items-end bg-black/60" onClick={onClose}>
+      <div className="w-full bg-slate-900 rounded-t-3xl p-3 space-y-1" onClick={(e) => e.stopPropagation()}>
+        {!isSkipped && (
+          <>
+            <button type="button" onClick={onSwap} className="w-full text-left px-4 py-3 rounded-xl text-white active:bg-slate-800">
+              Swap exercise…
+            </button>
+            <button type="button" onClick={onSkip} className="w-full text-left px-4 py-3 rounded-xl text-amber-400 active:bg-slate-800">
+              Skip this exercise
+            </button>
+          </>
+        )}
+        {isSkipped && (
+          <button type="button" onClick={onUnskip} className="w-full text-left px-4 py-3 rounded-xl text-white active:bg-slate-800">
+            Unskip
+          </button>
+        )}
+        {hasOverride && !isSkipped && (
+          <button type="button" onClick={onRevert} className="w-full text-left px-4 py-3 rounded-xl text-slate-300 active:bg-slate-800">
+            Revert to original
+          </button>
+        )}
+        <button type="button" onClick={onClose} className="w-full text-left px-4 py-3 rounded-xl text-slate-500 active:bg-slate-800">
+          Cancel
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ─── Sub-component: individual exercise accordion ─────────────────────────────
 function ExerciseCard({
   exercise,
@@ -50,8 +221,11 @@ function ExerciseCard({
   onLogSet,
   onUnlogSet,
   videoUrl,
+  isSkipped,
+  showUndoSkip,
+  onOpenMenu,
 }: {
-  exercise: ProgrammedExercise
+  exercise: ProgrammedExerciseWithOverride
   isExpanded: boolean
   onToggle: () => void
   sets: SetEntry[]
@@ -59,44 +233,66 @@ function ExerciseCard({
   onLogSet: (setIndex: number) => void
   onUnlogSet: (setIndex: number) => void
   videoUrl?: string
+  isSkipped: boolean
+  showUndoSkip: boolean
+  onOpenMenu: () => void
 }) {
   const activeSetIndex = sets.findIndex((s) => !s.logged)
   const allLogged = activeSetIndex === -1
 
   return (
-    <div className="bg-slate-900 rounded-2xl overflow-hidden">
-      {/* Header — always visible, tappable */}
-      <button
-        type="button"
-        onClick={onToggle}
-        className="w-full flex items-center justify-between px-5 py-4 active:bg-slate-800 transition-colors"
-      >
-        <div className="text-left">
-          <h3 className={`text-lg font-semibold ${allLogged ? 'text-emerald-400 line-through' : 'text-white'}`}>
-            {exercise.name}
-            {videoUrl && (
-              <span
-                role="button"
-                className="inline-flex items-center ml-2 text-slate-400 active:text-slate-200 align-middle"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  window.open(videoUrl, '_blank')
-                }}
-              >
-                <VideoIcon />
-              </span>
+    <div className={`bg-slate-900 rounded-2xl overflow-hidden ${isSkipped ? 'opacity-50' : ''}`}>
+      <div className="relative">
+        <button
+          type="button"
+          onClick={onToggle}
+          disabled={isSkipped}
+          className="w-full flex items-center justify-between px-5 py-4 active:bg-slate-800 transition-colors disabled:active:bg-transparent"
+        >
+          <div className="text-left flex-1 min-w-0">
+            <h3 className={`text-lg font-semibold ${allLogged && !isSkipped ? 'text-emerald-400 line-through' : 'text-white'}`}>
+              {exercise.name}
+              {videoUrl && (
+                <span
+                  role="button"
+                  className="inline-flex items-center ml-2 text-slate-400 active:text-slate-200 align-middle"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    window.open(videoUrl, '_blank')
+                  }}
+                >
+                  <VideoIcon />
+                </span>
+              )}
+            </h3>
+            {exercise.override && exercise.original_name && (
+              <p className="text-xs text-slate-500">swapped from {exercise.original_name}</p>
             )}
-          </h3>
-          <p className="text-sm text-slate-400">
-            {exercise.sets} &times; {exercise.reps}
-          </p>
-          <LastSessionLine exerciseName={exercise.name} />
-        </div>
-        <ChevronIcon open={isExpanded} />
-      </button>
+            <p className="text-sm text-slate-400">
+              {exercise.sets} &times; {exercise.reps}
+            </p>
+            {isSkipped ? (
+              <p className="text-sm font-semibold text-amber-400 mt-1">
+                Skipped {showUndoSkip && <button type="button" onClick={(e) => { e.stopPropagation(); onOpenMenu() }} className="underline">undo</button>}
+              </p>
+            ) : (
+              <LastSessionLine exerciseName={exercise.name} />
+            )}
+          </div>
+          {!isSkipped && <ChevronIcon open={isExpanded} />}
+        </button>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onOpenMenu() }}
+          className="absolute top-3 right-12 w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 active:text-slate-200 active:bg-slate-800"
+          aria-label="More options"
+        >
+          <MoreIcon />
+        </button>
+      </div>
 
       {/* Expanded set rows */}
-      {isExpanded && (
+      {isExpanded && !isSkipped && (
         <div className="px-5 pb-5 space-y-4">
           {sets.map((setEntry, idx) => (
             <SetRow
@@ -277,10 +473,10 @@ function ExerciseSetInitializer({
 // ─── Superset grouping helper ─────────────────────────────────────────────────
 interface ExerciseGroup {
   supersetGroup: string | null
-  exercises: ProgrammedExercise[]
+  exercises: ProgrammedExerciseWithOverride[]
 }
 
-function groupExercises(exercises: ProgrammedExercise[]): ExerciseGroup[] {
+function groupExercises(exercises: ProgrammedExerciseWithOverride[]): ExerciseGroup[] {
   const groups: ExerciseGroup[] = []
 
   for (const ex of exercises) {
@@ -355,17 +551,28 @@ function CheckFilledIcon() {
   )
 }
 
+function MoreIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm0 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm0 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z" />
+    </svg>
+  )
+}
+
 // ─── Main page component ──────────────────────────────────────────────────────
 export default function ActiveWorkout() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const userId = useUser()
-  const { workout, exercises, loading } = useWorkoutDetails(id)
+  const { workout, exercises, programId, loading, refresh: refreshDetails } = useWorkoutDetails(id)
   const exerciseVideos = useExerciseVideos()
 
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [setsMap, setSetsMap] = useState<Record<string, SetEntry[]>>({})
   const [submitting, setSubmitting] = useState(false)
+  const [menuExerciseId, setMenuExerciseId] = useState<string | null>(null)
+  const [swapSheetExerciseId, setSwapSheetExerciseId] = useState<string | null>(null)
+  const [skippedIds, setSkippedIds] = useState<Set<string>>(new Set())
 
   // Called by each ExerciseSetInitializer once suggestion resolves
   const handleSetsReady = useCallback((exerciseId: string, sets: SetEntry[]) => {
@@ -399,8 +606,50 @@ export default function ActiveWorkout() {
     })
   }
 
+  const openMenu = (exerciseId: string) => setMenuExerciseId(exerciseId)
+  const closeMenu = () => setMenuExerciseId(null)
+
+  const handleSwap = () => {
+    if (!menuExerciseId) return
+    setSwapSheetExerciseId(menuExerciseId)
+    setMenuExerciseId(null)
+  }
+
+  const handleSkip = () => {
+    if (!menuExerciseId) return
+    setSkippedIds((prev) => new Set(prev).add(menuExerciseId))
+    setMenuExerciseId(null)
+  }
+
+  const handleUnskip = () => {
+    if (!menuExerciseId) return
+    setSkippedIds((prev) => {
+      const next = new Set(prev)
+      next.delete(menuExerciseId)
+      return next
+    })
+    setMenuExerciseId(null)
+  }
+
+  const handleRevert = async () => {
+    const ex = exercises.find((e) => e.id === menuExerciseId)
+    if (!ex || !programId) return
+    await revertSlot(programId, ex.slot_key)
+    setMenuExerciseId(null)
+    refreshDetails()
+  }
+
+  const handleSwapSelect = async (newName: string) => {
+    const ex = exercises.find((e) => e.id === swapSheetExerciseId)
+    if (!ex || !programId) return
+    await swapSlot(programId, userId, ex.slot_key, newName)
+    setSwapSheetExerciseId(null)
+    refreshDetails()
+  }
+
   // Derive completion state
   const allExercisesLogged = exercises.length > 0 && exercises.every((ex) => {
+    if (skippedIds.has(ex.id)) return true
     const sets = setsMap[ex.id]
     return sets && sets.every((s) => s.logged)
   })
@@ -427,6 +676,10 @@ export default function ActiveWorkout() {
       })
     }
 
+    const skipped = exercises
+      .filter((ex) => skippedIds.has(ex.id))
+      .map((ex) => ({ exerciseName: ex.name, prescribedReps: ex.reps }))
+
     await logWorkoutComplete(
       userId,
       workout.id,
@@ -436,6 +689,9 @@ export default function ActiveWorkout() {
       workout.muscle_group,
       flatSets,
       partial ? 'Finished early' : undefined,
+      false,
+      undefined,
+      skipped,
     )
 
     navigate(`/${userId}`, { replace: true })
@@ -568,6 +824,9 @@ export default function ActiveWorkout() {
                 onLogSet={(si) => logSet(ex.id, si)}
                 onUnlogSet={(si) => unlogSet(ex.id, si)}
                 videoUrl={exerciseVideos.get(ex.name)}
+                isSkipped={skippedIds.has(ex.id)}
+                showUndoSkip={false}
+                onOpenMenu={() => openMenu(ex.id)}
               />
             )
           }
@@ -592,6 +851,9 @@ export default function ActiveWorkout() {
                   onLogSet={(si) => logSet(ex.id, si)}
                   onUnlogSet={(si) => unlogSet(ex.id, si)}
                   videoUrl={exerciseVideos.get(ex.name)}
+                  isSkipped={skippedIds.has(ex.id)}
+                  showUndoSkip={false}
+                  onOpenMenu={() => openMenu(ex.id)}
                 />
               ))}
             </div>
@@ -624,6 +886,23 @@ export default function ActiveWorkout() {
           )}
         </div>
       </div>
+
+      <MenuSheet
+        open={menuExerciseId !== null}
+        hasOverride={!!exercises.find((e) => e.id === menuExerciseId)?.override}
+        isSkipped={menuExerciseId ? skippedIds.has(menuExerciseId) : false}
+        onClose={closeMenu}
+        onSwap={handleSwap}
+        onSkip={handleSkip}
+        onRevert={handleRevert}
+        onUnskip={handleUnskip}
+      />
+      <SwapSheet
+        open={swapSheetExerciseId !== null}
+        currentName={exercises.find((e) => e.id === swapSheetExerciseId)?.name ?? ''}
+        onClose={() => setSwapSheetExerciseId(null)}
+        onSelect={handleSwapSelect}
+      />
     </div>
   )
 }
