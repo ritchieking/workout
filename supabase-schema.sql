@@ -161,3 +161,34 @@ INSERT INTO exercise_videos (name) VALUES
   ('Dumbbell Woodchop'),
   ('Dumbbell Zottman Curl')
 ON CONFLICT DO NOTHING;
+
+-- ─── Flexibility & history features ─────────────────────────────────────────
+
+-- Stable per-slot identity for substitutions across weeks
+ALTER TABLE programmed_exercises
+  ADD COLUMN IF NOT EXISTS slot_key TEXT;
+
+-- Backfill slot_key for existing rows: <workout name>:<exercise order_index>
+UPDATE programmed_exercises pe
+SET slot_key = pw.name || ':' || pe.order_index
+FROM programmed_workouts pw
+WHERE pe.workout_id = pw.id AND pe.slot_key IS NULL;
+
+-- Per-slot exercise substitutions
+CREATE TABLE IF NOT EXISTS exercise_overrides (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  program_id UUID REFERENCES programs(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL,
+  slot_key TEXT NOT NULL,
+  substitute_name TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE (program_id, slot_key)
+);
+
+ALTER TABLE exercise_overrides ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow all" ON exercise_overrides;
+CREATE POLICY "Allow all" ON exercise_overrides FOR ALL USING (true) WITH CHECK (true);
+
+-- Skip tracking on set_logs
+ALTER TABLE set_logs
+  ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'logged';

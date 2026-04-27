@@ -48,7 +48,22 @@ export interface ProgrammedExercise {
   body_region: 'upper' | 'lower'
   superset_group: string | null
   order_index: number
+  slot_key: string
   created_at: string
+}
+
+export interface ExerciseOverride {
+  id: string
+  program_id: string
+  user_id: string
+  slot_key: string
+  substitute_name: string
+  created_at: string
+}
+
+export interface ProgrammedExerciseWithOverride extends ProgrammedExercise {
+  override?: ExerciseOverride
+  original_name?: string
 }
 
 export interface WorkoutLog {
@@ -72,6 +87,7 @@ export interface SetLog {
   prescribed_reps: number
   actual_reps: number
   weight: number
+  status: 'logged' | 'skipped'
   created_at: string
 }
 
@@ -119,7 +135,7 @@ export interface ExerciseImport {
 // Enriched types for UI
 export interface WorkoutWithStatus extends ProgrammedWorkout {
   log?: WorkoutLog
-  exercises?: ProgrammedExercise[]
+  exercises?: ProgrammedExerciseWithOverride[]
 }
 
 export interface WeekWithWorkouts extends Week {
