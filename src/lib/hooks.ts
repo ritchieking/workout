@@ -148,52 +148,64 @@ export function useExerciseHistory(exerciseName: string, userId: string) {
   return history
 }
 
-export function useSuggestedWeight(exerciseName: string, _prescribedReps: number, bodyRegion: 'upper' | 'lower', userId: string) {
-  const [suggestion, setSuggestion] = useState<{ weight: number; reason: string } | null>(null)
-  const history = useExerciseHistory(exerciseName, userId)
+export interface LastSessionData {
+  lastSession: { weight: number; reps: number[]; date: string } | null
+  wasSkippedLastWeek: boolean
+}
+
+export function useLastSessionData(exerciseName: string, userId: string): LastSessionData {
+  const [data, setData] = useState<LastSessionData>({
+    lastSession: null,
+    wasSkippedLastWeek: false,
+  })
 
   useEffect(() => {
-    if (history.length === 0) {
-      setSuggestion(null)
-      return
-    }
+    if (!exerciseName) return
+    let cancelled = false
 
-    const increment = bodyRegion === 'upper' ? 5 : 10
+    Promise.all([
+      supabase
+        .from('set_logs')
+        .select('*, workout_logs!inner(completed_at, user_id)')
+        .eq('exercise_name', exerciseName)
+        .eq('workout_logs.user_id', userId)
+        .eq('status', 'logged')
+        .order('created_at', { ascending: false })
+        .limit(20),
+      supabase
+        .from('set_logs')
+        .select('status, workout_logs!inner(user_id)')
+        .eq('exercise_name', exerciseName)
+        .eq('workout_logs.user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1),
+    ]).then(([loggedRes, latestRes]) => {
+      if (cancelled) return
 
-    // Group sets by workout session
-    const sessions = new Map<string, SetLog[]>()
-    for (const s of history) {
-      const logId = s.workout_log_id
-      if (!sessions.has(logId)) sessions.set(logId, [])
-      sessions.get(logId)!.push(s)
-    }
+      const logged = loggedRes.data || []
+      const latest = latestRes.data || []
+      const wasSkippedLastWeek = latest[0]?.status === 'skipped'
 
-    const sessionList = Array.from(sessions.values())
-    if (sessionList.length === 0) return
-
-    const lastSession = sessionList[0]
-    const lastWeight = Math.max(...lastSession.map((s) => s.weight))
-    const allRepsHit = lastSession.every((s) => s.actual_reps >= s.prescribed_reps)
-
-    if (allRepsHit) {
-      setSuggestion({ weight: lastWeight + increment, reason: 'Hit all reps last time' })
-    } else {
-      // Check if missed 2+ consecutive sessions at same weight
-      if (sessionList.length >= 2) {
-        const prevSession = sessionList[1]
-        const prevWeight = Math.max(...prevSession.map((s) => s.weight))
-        const prevAllMissed = prevSession.some((s) => s.actual_reps < s.prescribed_reps)
-
-        if (prevAllMissed && prevWeight === lastWeight) {
-          setSuggestion({ weight: lastWeight - increment, reason: 'Missed reps 2 sessions — deload' })
-          return
-        }
+      let lastSession: LastSessionData['lastSession'] = null
+      if (logged.length > 0) {
+        const firstLogId = logged[0].workout_log_id
+        const sameSession = logged.filter((r) => r.workout_log_id === firstLogId)
+        sameSession.sort((a, b) => a.set_number - b.set_number)
+        const weight = Math.max(...sameSession.map((s) => s.weight))
+        const reps = sameSession.map((s) => s.actual_reps)
+        const completedAt = (sameSession[0] as unknown as { workout_logs: { completed_at: string } }).workout_logs.completed_at
+        lastSession = { weight, reps, date: completedAt }
       }
-      setSuggestion({ weight: lastWeight, reason: 'Missed reps — try again' })
-    }
-  }, [history, bodyRegion])
 
-  return suggestion
+      setData({ lastSession, wasSkippedLastWeek })
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [exerciseName, userId])
+
+  return data
 }
 
 export async function logWorkoutComplete(

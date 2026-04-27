@@ -1,6 +1,6 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useWorkoutDetails, useSuggestedWeight, useExerciseVideos, logWorkoutComplete } from '../lib/hooks'
+import { useWorkoutDetails, useLastSessionData, useExerciseVideos, logWorkoutComplete } from '../lib/hooks'
 import { useUser } from '../lib/UserContext'
 import type { ProgrammedExercise } from '../types'
 
@@ -11,24 +11,33 @@ interface SetEntry {
   logged: boolean
 }
 
-// ─── Sub-component: Weight Suggestion badge ───────────────────────────────────
-function SuggestionBadge({ exerciseName, prescribedReps, bodyRegion }: {
-  exerciseName: string
-  prescribedReps: number
-  bodyRegion: 'upper' | 'lower'
-}) {
+// ─── Sub-component: Last session info line ────────────────────────────────────
+function LastSessionLine({ exerciseName }: { exerciseName: string }) {
   const userId = useUser()
-  const suggestion = useSuggestedWeight(exerciseName, prescribedReps, bodyRegion, userId)
-  if (!suggestion) return null
+  const { lastSession, wasSkippedLastWeek } = useLastSessionData(exerciseName, userId)
 
-  const increment = bodyRegion === 'upper' ? 5 : 10
-  const sign = suggestion.reason.includes('deload') ? `-${increment}` : suggestion.reason.includes('Hit all') ? `+${increment}` : '+0'
+  if (!lastSession && !wasSkippedLastWeek) return null
 
   return (
-    <p className="text-sm text-emerald-400 mt-1">
-      Suggested: {suggestion.weight} lbs ({sign}) &mdash; {suggestion.reason}
-    </p>
+    <div className="mt-1 space-y-0.5">
+      {wasSkippedLastWeek && (
+        <p className="text-xs font-semibold text-amber-400 uppercase tracking-wider">
+          Skipped last week
+        </p>
+      )}
+      {lastSession && (
+        <p className="text-sm text-slate-400">
+          Last: {lastSession.weight} lb &times; {lastSession.reps.join(', ')}
+          <span className="text-slate-500"> ({formatShortDate(lastSession.date)})</span>
+        </p>
+      )}
+    </div>
   )
+}
+
+function formatShortDate(iso: string): string {
+  const d = new Date(iso)
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 }
 
 // ─── Sub-component: individual exercise accordion ─────────────────────────────
@@ -81,11 +90,7 @@ function ExerciseCard({
           <p className="text-sm text-slate-400">
             {exercise.sets} &times; {exercise.reps}
           </p>
-          <SuggestionBadge
-            exerciseName={exercise.name}
-            prescribedReps={exercise.reps}
-            bodyRegion={exercise.body_region}
-          />
+          <LastSessionLine exerciseName={exercise.name} />
         </div>
         <ChevronIcon open={isExpanded} />
       </button>
@@ -239,13 +244,7 @@ function SetRow({
   )
 }
 
-// ─── Helper: build initial sets from suggestion / defaults ────────────────────
-function useInitialWeight(exerciseName: string, prescribedReps: number, bodyRegion: 'upper' | 'lower'): number {
-  const userId = useUser()
-  const suggestion = useSuggestedWeight(exerciseName, prescribedReps, bodyRegion, userId)
-  return suggestion?.weight ?? 0
-}
-
+// ─── Helper: build initial sets from last session / defaults ─────────────────
 function ExerciseSetInitializer({
   exercise,
   onReady,
@@ -253,21 +252,24 @@ function ExerciseSetInitializer({
   exercise: ProgrammedExercise
   onReady: (exerciseId: string, sets: SetEntry[]) => void
 }) {
-  const weight = useInitialWeight(exercise.name, exercise.reps, exercise.body_region)
+  const userId = useUser()
+  const { lastSession } = useLastSessionData(exercise.name, userId)
   const hasInit = useRef(false)
 
-  if (!hasInit.current) {
-    hasInit.current = true
-    // Defer to avoid setState-during-render
-    setTimeout(() => {
-      const entries: SetEntry[] = Array.from({ length: exercise.sets }, () => ({
-        weight,
-        reps: exercise.reps,
+  useEffect(() => {
+    if (hasInit.current) return
+    const t = setTimeout(() => {
+      if (hasInit.current) return
+      hasInit.current = true
+      const entries: SetEntry[] = Array.from({ length: exercise.sets }, (_, i) => ({
+        weight: lastSession?.weight ?? 0,
+        reps: lastSession?.reps[i] ?? exercise.reps,
         logged: false,
       }))
       onReady(exercise.id, entries)
-    }, 0)
-  }
+    }, 250)
+    return () => clearTimeout(t)
+  }, [exercise, onReady, lastSession])
 
   return null
 }
